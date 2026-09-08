@@ -20,7 +20,6 @@ class InvitationScreen extends StatefulWidget {
 }
 
 class _InvitationScreenState extends State<InvitationScreen> {
-  final GlobalKey _boundaryKey = GlobalKey();
   final InvitationExportService _exportService =
       const InvitationExportService();
   final ShareService _shareService = ShareService();
@@ -54,7 +53,10 @@ class _InvitationScreenState extends State<InvitationScreen> {
 
     setState(() => _busy = true);
     try {
-      final png = await _exportService.capturePng(_boundaryKey);
+      final png = await _exportService.capturePng(
+        prefix: guest.prefix,
+        name: guest.name,
+      );
       if (!mounted) {
         return;
       }
@@ -168,7 +170,6 @@ class _InvitationScreenState extends State<InvitationScreen> {
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
                   child: InvitationPreview(
-                    boundaryKey: _boundaryKey,
                     prefix: guest.prefix,
                     name: guest.name,
                   ),

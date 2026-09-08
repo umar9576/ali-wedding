@@ -41,7 +41,7 @@ class ShareService {
     required String text,
   }) async {
     final blob = web.Blob(
-      <JSAny>[pngBytes.toJS].toJS,
+      <JSAny>[Uint8List.fromList(pngBytes).toJS].toJS,
       web.BlobPropertyBag(type: 'image/png'),
     );
     final file = web.File(
