@@ -11,10 +11,11 @@ class AppShell extends StatelessWidget {
   Widget build(BuildContext context) {
     return ColoredBox(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: Center(
+      child: Align(
+        alignment: Alignment.topCenter,
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: maxWidth),
-          child: child,
+          child: SizedBox(width: double.infinity, child: child),
         ),
       ),
     );

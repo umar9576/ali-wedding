@@ -16,6 +16,7 @@ class InvitationPreview extends StatelessWidget {
   Widget build(BuildContext context) {
     return FittedBox(
       fit: BoxFit.contain,
+      alignment: Alignment.topCenter,
       child: InvitationCard(prefix: prefix, name: name),
     );
   }

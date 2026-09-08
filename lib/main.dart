@@ -86,7 +86,7 @@ class _InvitationAppState extends State<InvitationApp> {
         builder: (context, child) {
           return Directionality(
             textDirection: TextDirection.rtl,
-            child: child ?? const SizedBox.shrink(),
+            child: ClipRect(child: child ?? const SizedBox.shrink()),
           );
         },
         onGenerateRoute: _onGenerateRoute,
