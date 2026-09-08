@@ -1,30 +1,57 @@
 import 'package:flutter/material.dart';
 
+import '../models/invitation_kind.dart';
+
 class InvitationLayout {
   InvitationLayout._();
 
   static const double canvasWidth = 1024;
   static const double canvasHeight = 1536;
-  static const String imageAsset = 'assets/invitation/card.jpg';
 
-  static const double guestBoxLeft = 118;
-  static const double guestBoxTop = 686;
-  static const double guestBoxWidth = 788;
-  static const double guestBoxHeight = 112;
-  static const double contentPaddingHorizontal = 42;
-  static const double contentPaddingVertical = 20;
+  static const String groomAsset = 'assets/invitation/card_groom.jpg';
+  static const String fatherAsset = 'assets/invitation/card_father.jpg';
 
+  static const Color overlayFill = Color(0xFFF4EBDA);
+  static const Color textColor = Color(0xFF382718);
   static const String fontFamily = 'Amiri';
-  static const double fontSize = 48;
-  static const double minFontSize = 28;
   static const FontWeight fontWeight = FontWeight.w700;
-  static const Color textColor = Color(0xFF3B2A18);
+
+  static const double guestTextLeft = 395;
+  static const double guestTextTop = 688;
+  static const double guestTextWidth = 500;
+  static const double guestTextHeight = 56;
+  static const double guestFontSize = 44;
+  static const double guestMinFontSize = 27;
+
+  static const double seatValueLeft = 118;
+  static const double seatValueTop = 711;
+  static const double seatValueWidth = 155;
+  static const double seatValueHeight = 38;
+  static const double seatFontSize = 34;
+  static const double seatMinFontSize = 24;
+
+  static const int minSeatCount = 1;
+  static const int maxSeatCount = 20;
+  static const int defaultSeatCount = 2;
+
+  static String assetFor(InvitationKind kind) {
+    return switch (kind) {
+      InvitationKind.groom => groomAsset,
+      InvitationKind.father => fatherAsset,
+    };
+  }
 
   static String guestLine(String prefix, String name) {
     final trimmedPrefix = prefix.trim();
+    final trimmedName = name.trim();
     if (trimmedPrefix.isEmpty) {
-      return name;
+      return trimmedName;
     }
-    return '$trimmedPrefix / $name';
+    if (trimmedName.isEmpty) {
+      return trimmedPrefix;
+    }
+    return '$trimmedPrefix / $trimmedName';
   }
+
+  static String seatLine(int seatCount) => '$seatCount';
 }

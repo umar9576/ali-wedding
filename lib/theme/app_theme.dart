@@ -33,6 +33,11 @@ class AppStrings {
   static const String prefixLabel = 'اللقب';
   static const String prefixHint = 'اكتب اللقب أو اتركه فارغًا';
   static const String prefixNone = 'بدون لقب';
+  static const String nameLabel = 'الاسم';
+  static const String nameHint = 'اكتب اسم المدعو';
+  static const String seatLabel = 'عدد المقاعد';
+  static const String cardGroom = 'دعوة العريس';
+  static const String cardFather = 'دعوة الوالد';
 }
 
 class AppTheme {

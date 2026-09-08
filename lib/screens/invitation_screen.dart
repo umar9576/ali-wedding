@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/guest.dart';
+import '../models/invitation_kind.dart';
 import '../services/invitation_export_service.dart';
 import '../services/share_service.dart';
 import '../services/share_types.dart';
@@ -10,6 +11,7 @@ import '../widgets/guests_scope.dart';
 import '../widgets/invitation_layout.dart';
 import '../widgets/invitation_preview.dart';
 import '../widgets/prefix_field.dart';
+import '../widgets/seat_count_field.dart';
 
 class InvitationScreen extends StatefulWidget {
   const InvitationScreen({super.key, required this.guestId});
@@ -37,7 +39,8 @@ class _InvitationScreenState extends State<InvitationScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    precacheImage(const AssetImage(InvitationLayout.imageAsset), context);
+    precacheImage(const AssetImage(InvitationLayout.groomAsset), context);
+    precacheImage(const AssetImage(InvitationLayout.fatherAsset), context);
   }
 
   Future<void> _detectShareSupport() async {
@@ -47,7 +50,13 @@ class _InvitationScreenState extends State<InvitationScreen> {
     }
   }
 
-  Future<void> _share(Guest guest, String prefix) async {
+  Future<void> _share({
+    required Guest guest,
+    required InvitationKind kind,
+    required String prefix,
+    required String name,
+    required int seatCount,
+  }) async {
     if (_busy) {
       return;
     }
@@ -55,8 +64,10 @@ class _InvitationScreenState extends State<InvitationScreen> {
     setState(() => _busy = true);
     try {
       final png = await _exportService.capturePng(
+        kind: kind,
         prefix: prefix,
-        name: guest.name,
+        name: name,
+        seatCount: seatCount,
       );
       if (!mounted) {
         return;
@@ -135,10 +146,30 @@ class _InvitationScreenState extends State<InvitationScreen> {
       guest: guest,
       busy: _busy,
       supportsFileShare: _supportsFileShare,
-      onShare: (prefix) => _share(guest, prefix),
+      onShare:
+          ({
+            required InvitationKind kind,
+            required String prefix,
+            required String name,
+            required int seatCount,
+          }) => _share(
+            guest: guest,
+            kind: kind,
+            prefix: prefix,
+            name: name,
+            seatCount: seatCount,
+          ),
     );
   }
 }
+
+typedef _ShareCallback =
+    Future<void> Function({
+      required InvitationKind kind,
+      required String prefix,
+      required String name,
+      required int seatCount,
+    });
 
 class _InvitationBody extends StatefulWidget {
   const _InvitationBody({
@@ -151,7 +182,7 @@ class _InvitationBody extends StatefulWidget {
   final Guest guest;
   final bool busy;
   final bool supportsFileShare;
-  final ValueChanged<String> onShare;
+  final _ShareCallback onShare;
 
   @override
   State<_InvitationBody> createState() => _InvitationBodyState();
@@ -159,11 +190,15 @@ class _InvitationBody extends StatefulWidget {
 
 class _InvitationBodyState extends State<_InvitationBody> {
   late final TextEditingController _prefixController;
+  late final TextEditingController _nameController;
+  InvitationKind _kind = InvitationKind.groom;
+  int _seatCount = InvitationLayout.defaultSeatCount;
 
   @override
   void initState() {
     super.initState();
     _prefixController = TextEditingController(text: widget.guest.prefix);
+    _nameController = TextEditingController(text: widget.guest.name);
   }
 
   @override
@@ -171,25 +206,27 @@ class _InvitationBodyState extends State<_InvitationBody> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.guest.id != widget.guest.id) {
       _prefixController.text = widget.guest.prefix;
+      _nameController.text = widget.guest.name;
     }
   }
 
   @override
   void dispose() {
     _prefixController.dispose();
+    _nameController.dispose();
     super.dispose();
   }
 
   String get _prefix => _prefixController.text.trim();
+  String get _name => _nameController.text.trim();
 
   @override
   Widget build(BuildContext context) {
-    final guest = widget.guest;
     final shareLabel =
         widget.supportsFileShare
             ? AppStrings.shareInvitation
             : AppStrings.shareWhatsApp;
-    final headerName = _prefix.isEmpty ? guest.name : '$_prefix ${guest.name}';
+    final headerName = InvitationLayout.guestLine(_prefix, _name);
 
     return AppShell(
       child: Scaffold(
@@ -208,7 +245,7 @@ class _InvitationBodyState extends State<_InvitationBody> {
                     ),
                     Expanded(
                       child: Text(
-                        headerName,
+                        headerName.isEmpty ? widget.guest.name : headerName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -225,15 +262,81 @@ class _InvitationBodyState extends State<_InvitationBody> {
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
-                child: PrefixField(
-                  controller: _prefixController,
-                  onChanged: (_) => setState(() {}),
+                child: Column(
+                  children: [
+                    SegmentedButton<InvitationKind>(
+                      segments: const [
+                        ButtonSegment(
+                          value: InvitationKind.groom,
+                          label: Text(AppStrings.cardGroom),
+                        ),
+                        ButtonSegment(
+                          value: InvitationKind.father,
+                          label: Text(AppStrings.cardFather),
+                        ),
+                      ],
+                      selected: {_kind},
+                      showSelectedIcon: false,
+                      onSelectionChanged: (selected) {
+                        setState(() => _kind = selected.first);
+                      },
+                      style: ButtonStyle(
+                        visualDensity: VisualDensity.compact,
+                        textStyle: WidgetStateProperty.all(
+                          const TextStyle(
+                            fontFamily: 'Tajawal',
+                            fontWeight: FontWeight.w700,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    PrefixField(
+                      controller: _prefixController,
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    const SizedBox(height: 10),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: TextField(
+                            key: const Key('name-field'),
+                            controller: _nameController,
+                            textInputAction: TextInputAction.done,
+                            textAlign: TextAlign.right,
+                            onChanged: (_) => setState(() {}),
+                            decoration: const InputDecoration(
+                              labelText: AppStrings.nameLabel,
+                              hintText: AppStrings.nameHint,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          flex: 2,
+                          child: SeatCountField(
+                            value: _seatCount,
+                            onChanged:
+                                (value) => setState(() => _seatCount = value),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                  child: InvitationPreview(prefix: _prefix, name: guest.name),
+                  child: InvitationPreview(
+                    kind: _kind,
+                    prefix: _prefix,
+                    name: _name,
+                    seatCount: _seatCount,
+                  ),
                 ),
               ),
               Padding(
@@ -243,7 +346,14 @@ class _InvitationBodyState extends State<_InvitationBody> {
                   children: [
                     FilledButton(
                       onPressed:
-                          widget.busy ? null : () => widget.onShare(_prefix),
+                          widget.busy
+                              ? null
+                              : () => widget.onShare(
+                                kind: _kind,
+                                prefix: _prefix,
+                                name: _name,
+                                seatCount: _seatCount,
+                              ),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.whatsapp,
                         foregroundColor: Colors.white,

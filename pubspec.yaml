@@ -25,7 +25,8 @@ flutter:
   uses-material-design: true
   assets:
     - assets/guests/guests.txt
-    - assets/invitation/card.jpg
+    - assets/invitation/card_groom.jpg
+    - assets/invitation/card_father.jpg
     - assets/invitation/invitation_layout.json
   fonts:
     - family: Amiri

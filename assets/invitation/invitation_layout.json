@@ -1,25 +1,70 @@
 {
+  "version": 2,
+  "template": "groom_self_invitation",
   "canvas": {
     "width": 1024,
     "height": 1536
   },
-  "guestBox": {
-    "left": 118,
-    "top": 686,
-    "width": 788,
-    "height": 112,
-    "contentPaddingHorizontal": 42,
-    "contentPaddingVertical": 20
+  "guest": {
+    "box": {
+      "left": 366,
+      "top": 657,
+      "width": 565,
+      "height": 118
+    },
+    "text": {
+      "left": 395,
+      "top": 688,
+      "width": 500,
+      "height": 56,
+      "fontFamily": "Amiri",
+      "fontSize": 44,
+      "minFontSize": 27,
+      "fontWeight": 700,
+      "color": "#382718",
+      "textAlign": "center",
+      "textDirection": "rtl",
+      "maxLines": 1,
+      "fit": "scaleDown",
+      "format": "{prefix} / {name}"
+    }
   },
-  "guestText": {
-    "baselineTop": 713,
-    "fontFamily": "Amiri",
-    "fontSize": 48,
-    "minFontSize": 28,
-    "fontWeight": 700,
-    "color": "#3B2A18",
-    "textAlign": "center",
-    "textDirection": "rtl",
-    "format": "{prefix} / {name}"
+  "seatCount": {
+    "box": {
+      "left": 88,
+      "top": 657,
+      "width": 215,
+      "height": 118
+    },
+    "value": {
+      "left": 118,
+      "top": 711,
+      "width": 155,
+      "height": 38,
+      "fontFamily": "Amiri",
+      "fontSize": 34,
+      "minFontSize": 24,
+      "fontWeight": 700,
+      "color": "#382718",
+      "textAlign": "center",
+      "textDirection": "rtl",
+      "maxLines": 1,
+      "fit": "scaleDown",
+      "format": "{seatCount}"
+    }
+  },
+  "variables": {
+    "prefix": {
+      "type": "string",
+      "example": "السيد"
+    },
+    "name": {
+      "type": "string",
+      "example": "أحمد محمد الحسن"
+    },
+    "seatCount": {
+      "type": "integer",
+      "example": 2
+    }
   }
 }

@@ -2,6 +2,7 @@ import 'package:ali_marriage/data/guest_repository.dart';
 import 'package:ali_marriage/main.dart';
 import 'package:ali_marriage/services/arabic_normalizer.dart';
 import 'package:ali_marriage/services/guest_parser.dart';
+import 'package:ali_marriage/models/invitation_kind.dart';
 import 'package:ali_marriage/widgets/invitation_card.dart';
 import 'package:ali_marriage/widgets/invitation_layout.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +83,8 @@ void main() {
     );
     expect(InvitationLayout.guestLine('  ', 'نائل عطار'), 'نائل عطار');
     expect(InvitationLayout.guestLine('', 'نائل عطار'), 'نائل عطار');
+    expect(InvitationLayout.guestLine('السيد', ''), 'السيد');
+    expect(InvitationLayout.seatLine(2), '2');
   });
 
   testWidgets('Invitation card fits long Arabic names', (tester) async {
@@ -94,8 +97,10 @@ void main() {
       const MaterialApp(
         home: Center(
           child: InvitationCard(
+            kind: InvitationKind.groom,
             prefix: 'الدكتور',
             name: 'محمد أحمد عبد الرحمن الحلبي',
+            seatCount: 2,
           ),
         ),
       ),
@@ -106,5 +111,6 @@ void main() {
       find.textContaining('الدكتور / محمد أحمد عبد الرحمن الحلبي'),
       findsOneWidget,
     );
+    expect(find.text('2'), findsOneWidget);
   });
 }
