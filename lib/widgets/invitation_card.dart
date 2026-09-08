@@ -10,12 +10,14 @@ class InvitationCard extends StatelessWidget {
     required this.prefix,
     required this.name,
     required this.seatCount,
+    required this.reservationNumber,
   });
 
   final InvitationKind kind;
   final String prefix;
   final String name;
   final int seatCount;
+  final String reservationNumber;
 
   static const double width = InvitationLayout.canvasWidth;
   static const double height = InvitationLayout.canvasHeight;
@@ -60,6 +62,18 @@ class InvitationCard extends StatelessWidget {
                   minFontSize: InvitationLayout.seatMinFontSize,
                 ),
               ),
+              Positioned(
+                left: InvitationLayout.reservationLeft,
+                top: InvitationLayout.reservationTop,
+                width: InvitationLayout.reservationWidth,
+                height: InvitationLayout.reservationHeight,
+                child: _OverlayText(
+                  text: InvitationLayout.reservationLine(reservationNumber),
+                  fontSize: InvitationLayout.reservationFontSize,
+                  minFontSize: InvitationLayout.reservationMinFontSize,
+                  fill: false,
+                ),
+              ),
             ],
           ),
         ),
@@ -73,47 +87,52 @@ class _OverlayText extends StatelessWidget {
     required this.text,
     required this.fontSize,
     required this.minFontSize,
+    this.fill = true,
   });
 
   final String text;
   final double fontSize;
   final double minFontSize;
+  final bool fill;
 
   @override
   Widget build(BuildContext context) {
-    return ColoredBox(
-      color: InvitationLayout.overlayFill,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          var size = fontSize;
-          while (size > minFontSize) {
-            final painter = TextPainter(
-              text: TextSpan(text: text, style: _style(size)),
-              textDirection: TextDirection.rtl,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              ellipsis: '…',
-            )..layout(maxWidth: constraints.maxWidth);
+    final child = LayoutBuilder(
+      builder: (context, constraints) {
+        var size = fontSize;
+        while (size > minFontSize) {
+          final painter = TextPainter(
+            text: TextSpan(text: text, style: _style(size)),
+            textDirection: TextDirection.rtl,
+            textAlign: TextAlign.center,
+            maxLines: 1,
+            ellipsis: '…',
+          )..layout(maxWidth: constraints.maxWidth);
 
-            if (!painter.didExceedMaxLines &&
-                painter.height <= constraints.maxHeight) {
-              break;
-            }
-            size -= 1;
+          if (!painter.didExceedMaxLines &&
+              painter.height <= constraints.maxHeight) {
+            break;
           }
+          size -= 1;
+        }
 
-          return Center(
-            child: Text(
-              text,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              style: _style(size),
-            ),
-          );
-        },
-      ),
+        return Center(
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: _style(size),
+          ),
+        );
+      },
     );
+
+    if (!fill) {
+      return child;
+    }
+
+    return ColoredBox(color: InvitationLayout.overlayFill, child: child);
   }
 
   static TextStyle _style(double fontSize) {

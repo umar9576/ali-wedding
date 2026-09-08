@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:ali_marriage/data/guest_repository.dart';
 import 'package:ali_marriage/main.dart';
 import 'package:ali_marriage/services/arabic_normalizer.dart';
@@ -85,6 +87,8 @@ void main() {
     expect(InvitationLayout.guestLine('', 'نائل عطار'), 'نائل عطار');
     expect(InvitationLayout.guestLine('السيد', ''), 'السيد');
     expect(InvitationLayout.seatLine(2), '2');
+    expect(InvitationLayout.reservationLine('4821'), 'رقم الحجز 4821');
+    expect(InvitationLayout.createReservationNumber(Random(1)).length, 4);
   });
 
   testWidgets('Invitation card fits long Arabic names', (tester) async {
@@ -101,6 +105,7 @@ void main() {
             prefix: 'الدكتور',
             name: 'محمد أحمد عبد الرحمن الحلبي',
             seatCount: 2,
+            reservationNumber: '4821',
           ),
         ),
       ),
@@ -112,5 +117,6 @@ void main() {
       findsOneWidget,
     );
     expect(find.text('2'), findsOneWidget);
+    expect(find.textContaining('رقم الحجز 4821'), findsOneWidget);
   });
 }

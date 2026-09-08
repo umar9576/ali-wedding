@@ -10,12 +10,14 @@ class InvitationPreview extends StatelessWidget {
     required this.prefix,
     required this.name,
     required this.seatCount,
+    required this.reservationNumber,
   });
 
   final InvitationKind kind;
   final String prefix;
   final String name;
   final int seatCount;
+  final String reservationNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class InvitationPreview extends StatelessWidget {
         prefix: prefix,
         name: name,
         seatCount: seatCount,
+        reservationNumber: reservationNumber,
       ),
     );
   }

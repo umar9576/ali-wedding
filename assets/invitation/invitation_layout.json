@@ -53,6 +53,22 @@
       "format": "{seatCount}"
     }
   },
+  "reservation": {
+    "left": 88,
+    "top": 784,
+    "width": 215,
+    "height": 40,
+    "fontFamily": "Amiri",
+    "fontSize": 22,
+    "minFontSize": 16,
+    "fontWeight": 700,
+    "color": "#382718",
+    "textAlign": "center",
+    "textDirection": "rtl",
+    "maxLines": 1,
+    "fit": "scaleDown",
+    "format": "رقم الحجز {reservationNumber}"
+  },
   "variables": {
     "prefix": {
       "type": "string",
@@ -65,6 +81,10 @@
     "seatCount": {
       "type": "integer",
       "example": 2
+    },
+    "reservationNumber": {
+      "type": "string",
+      "example": "4821"
     }
   }
 }

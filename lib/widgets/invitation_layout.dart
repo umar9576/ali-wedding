@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import '../models/invitation_kind.dart';
@@ -30,6 +32,13 @@ class InvitationLayout {
   static const double seatFontSize = 34;
   static const double seatMinFontSize = 24;
 
+  static const double reservationLeft = 88;
+  static const double reservationTop = 784;
+  static const double reservationWidth = 215;
+  static const double reservationHeight = 40;
+  static const double reservationFontSize = 22;
+  static const double reservationMinFontSize = 16;
+
   static const int minSeatCount = 1;
   static const int maxSeatCount = 20;
   static const int defaultSeatCount = 2;
@@ -54,4 +63,11 @@ class InvitationLayout {
   }
 
   static String seatLine(int seatCount) => '$seatCount';
+
+  static String reservationLine(String number) => 'رقم الحجز $number';
+
+  static String createReservationNumber([Random? random]) {
+    final rng = random ?? Random();
+    return (1000 + rng.nextInt(9000)).toString();
+  }
 }

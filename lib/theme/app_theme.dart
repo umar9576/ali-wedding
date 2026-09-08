@@ -29,7 +29,7 @@ class AppStrings {
   static const String shareFallback =
       'تم حفظ صورة الدعوة. يمكنك إرفاقها يدويًا في واتساب.';
   static const String whatsappMessage =
-      'السلام عليكم،\nيسرنا دعوتكم لحضور حفل زفاف الدكتور علي محمد حلبي.\nنتشرف بحضوركم 🌹';
+      'السلام عليكم،\nيسرنا دعوتكم لحضور حفل زفاف الدكتور علي محمد حلبي.\nنتشرف بحضوركم 🌹\n\nالموقع:\nhttps://www.google.com/maps/dir/?api=1&destination=37.0352892,37.3215081';
   static const String prefixLabel = 'اللقب';
   static const String prefixHint = 'اكتب اللقب أو اتركه فارغًا';
   static const String prefixNone = 'بدون لقب';
@@ -38,6 +38,7 @@ class AppStrings {
   static const String seatLabel = 'عدد المقاعد';
   static const String cardGroom = 'دعوة العريس';
   static const String cardFather = 'دعوة الوالد';
+  static const String reservationLabel = 'رقم الحجز';
 }
 
 class AppTheme {

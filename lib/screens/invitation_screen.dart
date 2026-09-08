@@ -56,6 +56,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
     required String prefix,
     required String name,
     required int seatCount,
+    required String reservationNumber,
   }) async {
     if (_busy) {
       return;
@@ -68,6 +69,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
         prefix: prefix,
         name: name,
         seatCount: seatCount,
+        reservationNumber: reservationNumber,
       );
       if (!mounted) {
         return;
@@ -152,12 +154,14 @@ class _InvitationScreenState extends State<InvitationScreen> {
             required String prefix,
             required String name,
             required int seatCount,
+            required String reservationNumber,
           }) => _share(
             guest: guest,
             kind: kind,
             prefix: prefix,
             name: name,
             seatCount: seatCount,
+            reservationNumber: reservationNumber,
           ),
     );
   }
@@ -169,6 +173,7 @@ typedef _ShareCallback =
       required String prefix,
       required String name,
       required int seatCount,
+      required String reservationNumber,
     });
 
 class _InvitationBody extends StatefulWidget {
@@ -193,12 +198,14 @@ class _InvitationBodyState extends State<_InvitationBody> {
   late final TextEditingController _nameController;
   InvitationKind _kind = InvitationKind.groom;
   int _seatCount = InvitationLayout.defaultSeatCount;
+  late String _reservationNumber;
 
   @override
   void initState() {
     super.initState();
     _prefixController = TextEditingController(text: widget.guest.prefix);
     _nameController = TextEditingController(text: widget.guest.name);
+    _reservationNumber = InvitationLayout.createReservationNumber();
   }
 
   @override
@@ -207,6 +214,7 @@ class _InvitationBodyState extends State<_InvitationBody> {
     if (oldWidget.guest.id != widget.guest.id) {
       _prefixController.text = widget.guest.prefix;
       _nameController.text = widget.guest.name;
+      _reservationNumber = InvitationLayout.createReservationNumber();
     }
   }
 
@@ -317,10 +325,27 @@ class _InvitationBodyState extends State<_InvitationBody> {
                         const SizedBox(width: 8),
                         Expanded(
                           flex: 2,
-                          child: SeatCountField(
-                            value: _seatCount,
-                            onChanged:
-                                (value) => setState(() => _seatCount = value),
+                          child: Column(
+                            children: [
+                              SeatCountField(
+                                value: _seatCount,
+                                onChanged:
+                                    (value) =>
+                                        setState(() => _seatCount = value),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                InvitationLayout.reservationLine(
+                                  _reservationNumber,
+                                ),
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w700,
+                                  color: AppColors.ink,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -336,6 +361,7 @@ class _InvitationBodyState extends State<_InvitationBody> {
                     prefix: _prefix,
                     name: _name,
                     seatCount: _seatCount,
+                    reservationNumber: _reservationNumber,
                   ),
                 ),
               ),
@@ -353,6 +379,7 @@ class _InvitationBodyState extends State<_InvitationBody> {
                                 prefix: _prefix,
                                 name: _name,
                                 seatCount: _seatCount,
+                                reservationNumber: _reservationNumber,
                               ),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.whatsapp,

@@ -24,6 +24,7 @@ class InvitationExportService {
     required String prefix,
     required String name,
     required int seatCount,
+    required String reservationNumber,
   }) async {
     final background = await _loadBackground(InvitationLayout.assetFor(kind));
     final width = exportWidth.round();
@@ -71,6 +72,18 @@ class InvitationExportService {
       fontSize: InvitationLayout.seatFontSize,
       minFontSize: InvitationLayout.seatMinFontSize,
     );
+    _paintOverlay(
+      canvas: canvas,
+      scale: scale,
+      left: InvitationLayout.reservationLeft,
+      top: InvitationLayout.reservationTop,
+      width: InvitationLayout.reservationWidth,
+      height: InvitationLayout.reservationHeight,
+      text: InvitationLayout.reservationLine(reservationNumber),
+      fontSize: InvitationLayout.reservationFontSize,
+      minFontSize: InvitationLayout.reservationMinFontSize,
+      fill: false,
+    );
 
     final picture = recorder.endRecording();
     final image = await picture.toImage(width, height);
@@ -117,6 +130,7 @@ class InvitationExportService {
     required String text,
     required double fontSize,
     required double minFontSize,
+    bool fill = true,
   }) {
     final box = Rect.fromLTWH(
       left * scale,
@@ -124,7 +138,9 @@ class InvitationExportService {
       width * scale,
       height * scale,
     );
-    canvas.drawRect(box, Paint()..color = InvitationLayout.overlayFill);
+    if (fill) {
+      canvas.drawRect(box, Paint()..color = InvitationLayout.overlayFill);
+    }
 
     final painter = _fittedPainter(
       text: text,
