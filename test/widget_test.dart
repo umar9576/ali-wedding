@@ -3,6 +3,7 @@ import 'package:ali_marriage/main.dart';
 import 'package:ali_marriage/services/arabic_normalizer.dart';
 import 'package:ali_marriage/services/guest_parser.dart';
 import 'package:ali_marriage/widgets/invitation_card.dart';
+import 'package:ali_marriage/widgets/invitation_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -72,6 +73,15 @@ void main() {
     expect(find.text('دعوات الزفاف'), findsOneWidget);
     expect(find.text('ابحث عن اسم المدعو'), findsOneWidget);
     expect(find.text('اكتب اسم المدعو للبحث عن الدعوة'), findsOneWidget);
+  });
+
+  test('Custom prefix is composed onto the guest name', () {
+    expect(
+      InvitationLayout.guestLine('الحاج', 'نائل عطار'),
+      'الحاج / نائل عطار',
+    );
+    expect(InvitationLayout.guestLine('  ', 'نائل عطار'), 'نائل عطار');
+    expect(InvitationLayout.guestLine('', 'نائل عطار'), 'نائل عطار');
   });
 
   testWidgets('Invitation card fits long Arabic names', (tester) async {

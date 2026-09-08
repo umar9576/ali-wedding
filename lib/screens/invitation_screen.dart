@@ -9,6 +9,7 @@ import '../widgets/app_shell.dart';
 import '../widgets/guests_scope.dart';
 import '../widgets/invitation_layout.dart';
 import '../widgets/invitation_preview.dart';
+import '../widgets/prefix_field.dart';
 
 class InvitationScreen extends StatefulWidget {
   const InvitationScreen({super.key, required this.guestId});
@@ -46,7 +47,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
     }
   }
 
-  Future<void> _share(Guest guest) async {
+  Future<void> _share(Guest guest, String prefix) async {
     if (_busy) {
       return;
     }
@@ -54,7 +55,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
     setState(() => _busy = true);
     try {
       final png = await _exportService.capturePng(
-        prefix: guest.prefix,
+        prefix: prefix,
         name: guest.name,
       );
       if (!mounted) {
@@ -130,13 +131,69 @@ class _InvitationScreenState extends State<InvitationScreen> {
       );
     }
 
+    return _InvitationBody(
+      guest: guest,
+      busy: _busy,
+      supportsFileShare: _supportsFileShare,
+      onShare: (prefix) => _share(guest, prefix),
+    );
+  }
+}
+
+class _InvitationBody extends StatefulWidget {
+  const _InvitationBody({
+    required this.guest,
+    required this.busy,
+    required this.supportsFileShare,
+    required this.onShare,
+  });
+
+  final Guest guest;
+  final bool busy;
+  final bool supportsFileShare;
+  final ValueChanged<String> onShare;
+
+  @override
+  State<_InvitationBody> createState() => _InvitationBodyState();
+}
+
+class _InvitationBodyState extends State<_InvitationBody> {
+  late final TextEditingController _prefixController;
+
+  @override
+  void initState() {
+    super.initState();
+    _prefixController = TextEditingController(text: widget.guest.prefix);
+  }
+
+  @override
+  void didUpdateWidget(covariant _InvitationBody oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.guest.id != widget.guest.id) {
+      _prefixController.text = widget.guest.prefix;
+    }
+  }
+
+  @override
+  void dispose() {
+    _prefixController.dispose();
+    super.dispose();
+  }
+
+  String get _prefix => _prefixController.text.trim();
+
+  @override
+  Widget build(BuildContext context) {
+    final guest = widget.guest;
     final shareLabel =
-        _supportsFileShare
+        widget.supportsFileShare
             ? AppStrings.shareInvitation
             : AppStrings.shareWhatsApp;
+    final headerName = _prefix.isEmpty ? guest.name : '$_prefix ${guest.name}';
 
     return AppShell(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Column(
             children: [
@@ -151,7 +208,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                     ),
                     Expanded(
                       child: Text(
-                        guest.displayName,
+                        headerName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         textAlign: TextAlign.center,
@@ -166,13 +223,17 @@ class _InvitationScreenState extends State<InvitationScreen> {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                child: PrefixField(
+                  controller: _prefixController,
+                  onChanged: (_) => setState(() {}),
+                ),
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
-                  child: InvitationPreview(
-                    prefix: guest.prefix,
-                    name: guest.name,
-                  ),
+                  child: InvitationPreview(prefix: _prefix, name: guest.name),
                 ),
               ),
               Padding(
@@ -181,7 +242,8 @@ class _InvitationScreenState extends State<InvitationScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     FilledButton(
-                      onPressed: _busy ? null : () => _share(guest),
+                      onPressed:
+                          widget.busy ? null : () => widget.onShare(_prefix),
                       style: FilledButton.styleFrom(
                         backgroundColor: AppColors.whatsapp,
                         foregroundColor: Colors.white,
@@ -196,7 +258,7 @@ class _InvitationScreenState extends State<InvitationScreen> {
                         ),
                       ),
                       child:
-                          _busy
+                          widget.busy
                               ? const SizedBox(
                                 width: 22,
                                 height: 22,
@@ -210,7 +272,9 @@ class _InvitationScreenState extends State<InvitationScreen> {
                     const SizedBox(height: 8),
                     TextButton(
                       onPressed:
-                          _busy ? null : () => Navigator.of(context).maybePop(),
+                          widget.busy
+                              ? null
+                              : () => Navigator.of(context).maybePop(),
                       child: const Text(
                         AppStrings.back,
                         style: TextStyle(fontSize: 16, color: AppColors.ink),

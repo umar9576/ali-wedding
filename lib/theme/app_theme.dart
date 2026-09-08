@@ -30,6 +30,9 @@ class AppStrings {
       'تم حفظ صورة الدعوة. يمكنك إرفاقها يدويًا في واتساب.';
   static const String whatsappMessage =
       'السلام عليكم،\nيسرنا دعوتكم لحضور حفل زفاف الدكتور علي محمد حلبي.\nنتشرف بحضوركم 🌹';
+  static const String prefixLabel = 'اللقب';
+  static const String prefixHint = 'اكتب اللقب أو اتركه فارغًا';
+  static const String prefixNone = 'بدون لقب';
 }
 
 class AppTheme {
