@@ -1,0 +1,35 @@
+{
+    "name": "دعوات الزفاف",
+    "short_name": "دعوات الزفاف",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ddd7cc",
+    "theme_color": "#b99043",
+    "description": "دعوات زفاف الدكتور علي محمد حلبي",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/Icon-192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/Icon-maskable-192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable"
+        },
+        {
+            "src": "icons/Icon-maskable-512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
+        }
+    ]
+}

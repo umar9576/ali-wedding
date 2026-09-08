@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+  <base href="/ali-wedding/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="دعوات زفاف الدكتور علي محمد حلبي">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#ddd7cc">
+
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="دعوات الزفاف">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>دعوات الزفاف</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    /* Keep the host document LTR. iOS Safari offsets the Flutter canvas
+       when html/body are RTL, even though the app itself is Arabic RTL. */
+    html, body {
+      width: 100%;
+      max-width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      overscroll-behavior: none;
+      background: #ddd7cc;
+      position: fixed;
+      inset: 0;
+      left: 0;
+      right: auto;
+      top: 0;
+      bottom: 0;
+      direction: ltr !important;
+    }
+
+    flutter-view,
+    flt-glass-pane,
+    flt-scene-host {
+      position: absolute !important;
+      inset: 0 !important;
+      left: 0 !important;
+      right: auto !important;
+      width: 100% !important;
+      height: 100% !important;
+      transform: none !important;
+      margin: 0 !important;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    function pinHostToLtr() {
+      document.documentElement.setAttribute('dir', 'ltr');
+      document.documentElement.style.direction = 'ltr';
+      if (document.body) {
+        document.body.setAttribute('dir', 'ltr');
+        document.body.style.direction = 'ltr';
+      }
+    }
+    pinHostToLtr();
+    new MutationObserver(pinHostToLtr).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['dir']
+    });
+  </script>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
