@@ -1,0 +1,25 @@
+{
+  "canvas": {
+    "width": 1024,
+    "height": 1536
+  },
+  "guestBox": {
+    "left": 118,
+    "top": 686,
+    "width": 788,
+    "height": 112,
+    "contentPaddingHorizontal": 42,
+    "contentPaddingVertical": 20
+  },
+  "guestText": {
+    "baselineTop": 713,
+    "fontFamily": "Amiri",
+    "fontSize": 48,
+    "minFontSize": 28,
+    "fontWeight": 700,
+    "color": "#3B2A18",
+    "textAlign": "center",
+    "textDirection": "rtl",
+    "format": "{prefix} / {name}"
+  }
+}
